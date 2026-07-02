@@ -74,8 +74,9 @@
 
   <div class="card">
     <div id="reader"></div>
-    <div class="cam-status" id="camStatus">Presiona "Iniciar cámara" para comenzar</div>
-    <button class="btn btn-primary btn-full" id="btnIniciar" style="margin-top:10px;">📷 Iniciar cámara</button>
+    <div class="cam-status" id="camStatus">Presiona "Registrar" para comenzar</div>
+    <button class="btn btn-primary btn-full" id="btnRegistrarNuevo" style="margin-top:10px;display:none;">🔄 Registrar nueva asistencia</button>
+    <button class="btn btn-primary btn-full" id="btnIniciar" style="margin-top:10px;">📷 Registrar</button>
     <div class="btns" id="controlesActivos" style="display:none;">
       <button class="btn btn-secondary" id="btnCambiarCam">🔄 Cambiar cámara</button>
       <button class="btn btn-primary" id="btnPausar">⏸ Pausar</button>
@@ -108,7 +109,7 @@
 
 <script>
   // ⚠️ PEGA AQUÍ LA URL DE TU DESPLIEGUE DE APPS SCRIPT (termina en /exec)
-  const URL_APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbzdNSRXOTnRTDexTG932Hqe__O_4TwNx3TSiOjU3zqKOFdEtSwyVl_6pWHFO2XlvF5G/exec';
+  const URL_APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbyYdV_w5CR65OegPn_Zpw0-YqZyWm53rQDrNoHP_d3oYoZNt9JlWtYVKhglftzwYth5/exec';
 
   const readerId = "reader";
   let html5QrCode;
@@ -130,6 +131,7 @@
   const btnPausar = document.getElementById('btnPausar');
   const btnCambiarCam = document.getElementById('btnCambiarCam');
   const controlesActivos = document.getElementById('controlesActivos');
+  const btnRegistrarNuevo = document.getElementById('btnRegistrarNuevo');
 
   if (!URL_APPS_SCRIPT || URL_APPS_SCRIPT.indexOf('PEGA_AQUI') >= 0) {
     document.getElementById('configWarning').style.display = 'block';
@@ -147,7 +149,7 @@
   }
   function vibrar(ms){ if (navigator.vibrate) navigator.vibrate(ms); }
 
-  // ---------- Cámara (requiere gesto del usuario: botón "Iniciar cámara") ----------
+  // ---------- Cámara (requiere gesto del usuario: botón "Registrar") ----------
   btnIniciar.addEventListener('click', () => {
     btnIniciar.style.display = 'none';
     controlesActivos.style.display = 'flex';
@@ -280,17 +282,21 @@
       resultSub.textContent = r.mensaje || 'Intenta nuevamente';
       resultDatos.innerHTML = '';
     }
-    camStatus.textContent = '📷 Listo para el siguiente escaneo...';
+
+    // Pausa el escáner y pide confirmación manual para el siguiente registro
+    pausado = true;
+    camStatus.textContent = 'Presiona "Registrar nueva asistencia" para continuar';
+    btnRegistrarNuevo.style.display = 'block';
   }
 
   function datosHTML(p){
-  return fila('Nombre', p.nombre)
-       + fila('DNI', p.dni)
-       + fila('Correo', p.correo)
-       + fila('Sede', p.sede)
-       + fila('Cargo', p.cargo)
-       + fila('Tipo', p.tipoInvitado);
-}
+    return fila('Nombre', p.nombre)
+         + fila('DNI', p.dni)
+         + fila('Correo', p.correo)
+         + fila('Sede', p.sede)
+         + fila('Cargo', p.cargo)
+         + fila('Tipo', p.tipoInvitado);
+  }
   function fila(l,v){ return '<div><span class="lbl">'+l+'</span><span class="val">'+(v||'-')+'</span></div>'; }
   function agregarHistorial(nombre, hora, tipo) {
     const item = document.createElement('div');
@@ -299,6 +305,14 @@
     listaHistorial.prepend(item);
     while (listaHistorial.children.length > 8) listaHistorial.removeChild(listaHistorial.lastChild);
   }
+
+  btnRegistrarNuevo.addEventListener('click', () => {
+    btnRegistrarNuevo.style.display = 'none';
+    resultBox.style.display = 'none';
+    ultimoCodigo = null;
+    pausado = false;
+    camStatus.textContent = '📷 Enfoca el QR del docente...';
+  });
 
   btnPausar.addEventListener('click', () => {
     pausado = !pausado;
