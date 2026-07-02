@@ -1,207 +1,72 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<base target="_top">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <title>Asistencia · Día del Maestro</title>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
   :root{
-    --innova-teal:#00A99D;
-    --innova-teal-dark:#00807A;
-    --innova-navy:#1B2A4A;
-    --innova-orange:#F7941D;
-    --ok:#1FA97C;
-    --warn:#F7941D;
-    --err:#E14B4B;
-    --bg:#F4F7F8;
+    --innova-teal:#00A99D; --innova-teal-dark:#00807A; --innova-navy:#1B2A4A;
+    --innova-orange:#F7941D; --ok:#1FA97C; --warn:#F7941D; --err:#E14B4B;
   }
   *{box-sizing:border-box;}
-  body{
-    margin:0;
-    font-family:'Segoe UI',Roboto,Arial,sans-serif;
+  body{margin:0;font-family:'Segoe UI',Roboto,Arial,sans-serif;
     background:linear-gradient(160deg,var(--innova-navy) 0%,var(--innova-teal-dark) 100%);
-    min-height:100vh;
-    color:#1B2A4A;
-  }
-  .container{
-    max-width:480px;
-    margin:0 auto;
-    padding:16px 16px 40px;
-  }
-  header{
-    text-align:center;
-    padding:18px 10px 10px;
-    color:#fff;
-  }
-  header .logo-wrap{
-    width:78px;height:78px;
-    margin:0 auto 10px;
-    background:#fff;
-    border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-    box-shadow:0 4px 14px rgba(0,0,0,.25);
-    overflow:hidden;
-  }
-  header .logo-wrap img{
-    width:100%;height:100%;object-fit:contain;
-  }
-  header h1{
-    font-size:19px;
-    margin:4px 0 2px;
-    font-weight:700;
-  }
-  header p{
-    margin:0;
-    font-size:13px;
-    opacity:.9;
-  }
-
-  .card{
-    background:#fff;
-    border-radius:16px;
-    padding:16px;
-    margin-top:14px;
-    box-shadow:0 6px 20px rgba(0,0,0,.12);
-  }
-
-  #reader{
-    width:100%;
-    border-radius:12px;
-    overflow:hidden;
-    background:#000;
-  }
-  #reader video{ border-radius:12px; }
-
-  .cam-status{
-    text-align:center;
-    font-size:13px;
-    color:#5b6b7a;
-    margin-top:8px;
-    min-height:18px;
-  }
-
-  .btns{
-    display:flex;
-    gap:8px;
-    margin-top:10px;
-  }
-  .btn{
-    flex:1;
-    border:none;
-    border-radius:10px;
-    padding:11px 8px;
-    font-size:13.5px;
-    font-weight:600;
-    cursor:pointer;
-    transition:.15s;
-  }
-  .btn-primary{ background:var(--innova-teal); color:#fff; }
-  .btn-primary:active{ background:var(--innova-teal-dark); }
-  .btn-secondary{ background:#EDF1F2; color:#1B2A4A; }
-  .btn-secondary:active{ background:#dfe5e7; }
-
-  .stats{
-    display:flex;
-    gap:10px;
-    margin-top:14px;
-  }
-  .stat{
-    flex:1;
-    background:#fff;
-    border-radius:14px;
-    padding:12px;
-    text-align:center;
-    box-shadow:0 4px 14px rgba(0,0,0,.10);
-  }
-  .stat .num{ font-size:22px; font-weight:800; color:var(--innova-navy); }
-  .stat .lbl{ font-size:11.5px; color:#7a8894; margin-top:2px; }
-
-  .result{
-    margin-top:14px;
-    border-radius:16px;
-    padding:16px;
-    display:none;
-    animation:pop .25s ease;
-  }
-  @keyframes pop{ from{transform:scale(.95); opacity:0;} to{transform:scale(1); opacity:1;} }
-
-  .result.ok{ background:#E8F8F1; border:2px solid var(--ok); }
-  .result.duplicado{ background:#FFF4E4; border:2px solid var(--warn); }
-  .result.no_encontrado, .result.error{ background:#FDECEC; border:2px solid var(--err); }
-
-  .result .icon{
-    width:44px;height:44px;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-    font-size:24px;color:#fff;margin:0 auto 8px;
-  }
-  .result.ok .icon{ background:var(--ok); }
-  .result.duplicado .icon{ background:var(--warn); }
-  .result.no_encontrado .icon, .result.error .icon{ background:var(--err); }
-
-  .result h2{
-    text-align:center;
-    font-size:16px;
-    margin:0 0 4px;
-  }
-  .result .sub{
-    text-align:center;
-    font-size:12.5px;
-    color:#5b6b7a;
-    margin-bottom:10px;
-  }
-  .result .datos{
-    background:rgba(255,255,255,.7);
-    border-radius:10px;
-    padding:10px 12px;
-    font-size:13.5px;
-  }
-  .result .datos div{ display:flex; justify-content:space-between; padding:3px 0; }
-  .result .datos span.lbl{ color:#7a8894; }
-  .result .datos span.val{ font-weight:600; text-align:right; }
-
-  .historial{
-    margin-top:14px;
-  }
-  .historial h3{
-    font-size:13px;
-    color:#e9f5f3;
-    margin:0 0 8px 4px;
-    font-weight:600;
-  }
-  .hist-item{
-    background:#fff;
-    border-radius:10px;
-    padding:9px 12px;
-    margin-bottom:6px;
-    font-size:12.5px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    box-shadow:0 2px 8px rgba(0,0,0,.08);
-  }
-  .hist-item .nombre{ font-weight:600; color:#1B2A4A; }
-  .hist-item .hora{ color:#7a8894; }
-  .hist-item.dup{ border-left:4px solid var(--warn); }
-  .hist-item.ok{ border-left:4px solid var(--ok); }
-
-  footer{
-    text-align:center;
-    color:#dfeceb;
-    font-size:11px;
-    margin-top:22px;
-    opacity:.85;
-  }
+    min-height:100vh;color:#1B2A4A;}
+  .container{max-width:480px;margin:0 auto;padding:16px 16px 40px;}
+  header{text-align:center;padding:18px 10px 10px;color:#fff;}
+  header .logo-wrap{width:78px;height:78px;margin:0 auto 10px;background:#fff;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.25);overflow:hidden;}
+  header .logo-wrap img{width:100%;height:100%;object-fit:contain;}
+  header h1{font-size:19px;margin:4px 0 2px;font-weight:700;}
+  header p{margin:0;font-size:13px;opacity:.9;}
+  .card{background:#fff;border-radius:16px;padding:16px;margin-top:14px;box-shadow:0 6px 20px rgba(0,0,0,.12);}
+  #reader{width:100%;border-radius:12px;overflow:hidden;background:#000;min-height:60px;}
+  #reader video{border-radius:12px;}
+  .cam-status{text-align:center;font-size:13px;color:#5b6b7a;margin-top:8px;min-height:18px;}
+  .btns{display:flex;gap:8px;margin-top:10px;}
+  .btn{flex:1;border:none;border-radius:10px;padding:12px 8px;font-size:14px;font-weight:600;cursor:pointer;}
+  .btn-primary{background:var(--innova-teal);color:#fff;}
+  .btn-secondary{background:#EDF1F2;color:#1B2A4A;}
+  .btn-full{width:100%;}
+  .stats{display:flex;gap:10px;margin-top:14px;}
+  .stat{flex:1;background:#fff;border-radius:14px;padding:12px;text-align:center;box-shadow:0 4px 14px rgba(0,0,0,.10);}
+  .stat .num{font-size:22px;font-weight:800;color:var(--innova-navy);}
+  .stat .lbl{font-size:11.5px;color:#7a8894;margin-top:2px;}
+  .result{margin-top:14px;border-radius:16px;padding:16px;display:none;}
+  .result.ok{background:#E8F8F1;border:2px solid var(--ok);}
+  .result.duplicado{background:#FFF4E4;border:2px solid var(--warn);}
+  .result.no_encontrado,.result.error{background:#FDECEC;border:2px solid var(--err);}
+  .result .icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:24px;color:#fff;margin:0 auto 8px;}
+  .result.ok .icon{background:var(--ok);}
+  .result.duplicado .icon{background:var(--warn);}
+  .result.no_encontrado .icon,.result.error .icon{background:var(--err);}
+  .result h2{text-align:center;font-size:16px;margin:0 0 4px;}
+  .result .sub{text-align:center;font-size:12.5px;color:#5b6b7a;margin-bottom:10px;}
+  .result .datos{background:rgba(255,255,255,.7);border-radius:10px;padding:10px 12px;font-size:13.5px;}
+  .result .datos div{display:flex;justify-content:space-between;padding:3px 0;}
+  .result .datos span.lbl{color:#7a8894;}
+  .result .datos span.val{font-weight:600;text-align:right;}
+  .historial{margin-top:14px;}
+  .historial h3{font-size:13px;color:#e9f5f3;margin:0 0 8px 4px;font-weight:600;}
+  .hist-item{background:#fff;border-radius:10px;padding:9px 12px;margin-bottom:6px;font-size:12.5px;
+    display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.08);}
+  .hist-item .nombre{font-weight:600;color:#1B2A4A;}
+  .hist-item .hora{color:#7a8894;}
+  .hist-item.dup{border-left:4px solid var(--warn);}
+  .hist-item.ok{border-left:4px solid var(--ok);}
+  footer{text-align:center;color:#dfeceb;font-size:11px;margin-top:22px;opacity:.85;}
+  .config-warning{background:#FDECEC;border:2px solid var(--err);border-radius:10px;padding:12px;font-size:13px;margin-top:14px;display:none;}
 </style>
 </head>
 <body>
 <div class="container">
-
   <header>
-    <div class="logo-wrap">
-      <!-- Reemplaza este src por la URL de tu logo de Innova Schools -->
-      <img src="https://raw.githubusercontent.com/LUIS95paredes/logo_maestro/acb04b505c68f0c469a6ddd3bbdf5c6f3f744fe1/ChatGPT%20Image%201%20jul%202026%2C%2010_48_38%20p.m..png" alt="Innova Schools">
+    <div class="logo-wrap" style="background:var(--innova-teal);display:flex;align-items:center;justify-content:center;">
+      <!-- Reemplaza este bloque por <img src="https://raw.githubusercontent.com/LUIS95paredes/logo_maestro/acb04b505c68f0c469a6ddd3bbdf5c6f3f744fe1/ChatGPT%20Image%201%20jul%202026%2C%2010_48_38%20p.m..png" alt="Innova Schools"> cuando tengas el link del logo -->
+      <span style="color:#fff;font-weight:800;font-size:22px;">IS</span>
     </div>
     <h1>🎓 Día del Maestro</h1>
     <p>Control de asistencia por código QR</p>
@@ -209,22 +74,17 @@
 
   <div class="card">
     <div id="reader"></div>
-    <div class="cam-status" id="camStatus">Iniciando cámara...</div>
-    <div class="btns">
+    <div class="cam-status" id="camStatus">Presiona "Iniciar cámara" para comenzar</div>
+    <button class="btn btn-primary btn-full" id="btnIniciar" style="margin-top:10px;">📷 Iniciar cámara</button>
+    <div class="btns" id="controlesActivos" style="display:none;">
       <button class="btn btn-secondary" id="btnCambiarCam">🔄 Cambiar cámara</button>
       <button class="btn btn-primary" id="btnPausar">⏸ Pausar</button>
     </div>
   </div>
 
   <div class="stats">
-    <div class="stat">
-      <div class="num" id="numPresentes">0</div>
-      <div class="lbl">Presentes</div>
-    </div>
-    <div class="stat">
-      <div class="num" id="numTotal">0</div>
-      <div class="lbl">Total docentes</div>
-    </div>
+    <div class="stat"><div class="num" id="numPresentes">-</div><div class="lbl">Presentes</div></div>
+    <div class="stat"><div class="num" id="numTotal">-</div><div class="lbl">Total docentes</div></div>
   </div>
 
   <div class="result" id="resultBox">
@@ -239,92 +99,90 @@
     <div id="listaHistorial"></div>
   </div>
 
+  <div class="config-warning" id="configWarning">
+    ⚠️ Falta configurar la URL de tu Apps Script. Edita la constante <b>URL_APPS_SCRIPT</b> al final del archivo scanner.html.
+  </div>
+
   <footer>Innova Schools · Sistema de asistencia QR</footer>
 </div>
 
 <script>
+  // ⚠️ PEGA AQUÍ LA URL DE TU DESPLIEGUE DE APPS SCRIPT (termina en /exec)
+  const URL_APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbzdNSRXOTnRTDexTG932Hqe__O_4TwNx3TSiOjU3zqKOFdEtSwyVl_6pWHFO2XlvF5G/exec';
+
   const readerId = "reader";
   let html5QrCode;
   let camaras = [];
   let camaraActualIdx = 0;
-  let procesando = false;   // evita doble registro del mismo frame
+  let procesando = false;
   let pausado = false;
   let ultimoCodigo = null;
   let ultimoTiempo = 0;
 
-  const camStatus   = document.getElementById('camStatus');
-  const resultBox   = document.getElementById('resultBox');
-  const resultIcon  = document.getElementById('resultIcon');
+  const camStatus = document.getElementById('camStatus');
+  const resultBox = document.getElementById('resultBox');
+  const resultIcon = document.getElementById('resultIcon');
   const resultTitle = document.getElementById('resultTitle');
-  const resultSub   = document.getElementById('resultSub');
+  const resultSub = document.getElementById('resultSub');
   const resultDatos = document.getElementById('resultDatos');
   const listaHistorial = document.getElementById('listaHistorial');
-  const btnPausar   = document.getElementById('btnPausar');
+  const btnIniciar = document.getElementById('btnIniciar');
+  const btnPausar = document.getElementById('btnPausar');
   const btnCambiarCam = document.getElementById('btnCambiarCam');
+  const controlesActivos = document.getElementById('controlesActivos');
 
-  // ---------- Sonido de beep (sin archivos externos) ----------
+  if (!URL_APPS_SCRIPT || URL_APPS_SCRIPT.indexOf('PEGA_AQUI') >= 0) {
+    document.getElementById('configWarning').style.display = 'block';
+  }
+
   function beep(frecuencia, duracionMs) {
     try {
       const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'sine';
-      osc.frequency.value = frecuencia;
-      osc.connect(gain);
-      gain.connect(ctx.destination);
+      const osc = ctx.createOscillator(); const gain = ctx.createGain();
+      osc.type = 'sine'; osc.frequency.value = frecuencia;
+      osc.connect(gain); gain.connect(ctx.destination);
       gain.gain.setValueAtTime(0.15, ctx.currentTime);
-      osc.start();
-      osc.stop(ctx.currentTime + duracionMs / 1000);
-    } catch (e) { /* algunos navegadores requieren interacción previa: se ignora */ }
+      osc.start(); osc.stop(ctx.currentTime + duracionMs / 1000);
+    } catch (e) {}
   }
+  function vibrar(ms){ if (navigator.vibrate) navigator.vibrate(ms); }
 
-  function vibrar(ms) {
-    if (navigator.vibrate) navigator.vibrate(ms);
-  }
+  // ---------- Cámara (requiere gesto del usuario: botón "Iniciar cámara") ----------
+  btnIniciar.addEventListener('click', () => {
+    btnIniciar.style.display = 'none';
+    controlesActivos.style.display = 'flex';
+    iniciarEscaner();
+  });
 
-  // ---------- Inicialización de cámara ----------
   function iniciarEscaner() {
     if (!window.isSecureContext) {
-      camStatus.textContent = '⚠️ Esta app debe abrirse por HTTPS para usar la cámara.';
+      camStatus.textContent = '⚠️ Debes abrir esta página por HTTPS para usar la cámara.';
       return;
     }
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       camStatus.textContent = '⚠️ Tu navegador no soporta acceso a la cámara.';
       return;
     }
-
-    html5QrCode = new Html5Qrcode(readerId, /* verbose= */ false);
-
+    html5QrCode = new Html5Qrcode(readerId, false);
     Html5Qrcode.getCameras().then(dispositivos => {
       if (!dispositivos || dispositivos.length === 0) {
-        camStatus.textContent = '⚠️ No se detectó ninguna cámara en este dispositivo.';
+        camStatus.textContent = '⚠️ No se detectó ninguna cámara.';
         return;
       }
       camaras = dispositivos;
-      // Preferir cámara trasera si existe (útil en celulares)
       const trasera = dispositivos.findIndex(d => /back|rear|trasera|environment/i.test(d.label));
       camaraActualIdx = trasera >= 0 ? trasera : 0;
       arrancarCamara(camaras[camaraActualIdx].id);
     }).catch(err => {
-      camStatus.textContent = '⚠️ Permiso de cámara denegado. Actívalo en la configuración del navegador.';
+      camStatus.textContent = '⚠️ Permiso de cámara denegado. Revisa los permisos del sitio.';
       console.error(err);
     });
   }
 
   function arrancarCamara(cameraId) {
-    const config = {
-      fps: 10,
-      qrbox: { width: 240, height: 240 },
-      aspectRatio: 1.0
-    };
+    const config = { fps: 10, qrbox: { width: 240, height: 240 }, aspectRatio: 1.0 };
     camStatus.textContent = '📷 Enfoca el QR del docente...';
-
-    html5QrCode.start(
-      cameraId,
-      config,
-      onScanSuccess,
-      () => { /* callback de error de frame: se ignora, es normal mientras no hay QR en cuadro */ }
-    ).catch(err => {
+    html5QrCode.start(cameraId, config, onScanSuccess, () => {}).catch(err => {
       camStatus.textContent = '⚠️ No se pudo iniciar la cámara: ' + (err.message || err);
       console.error(err);
     });
@@ -332,127 +190,129 @@
 
   function onScanSuccess(decodedText) {
     if (procesando || pausado) return;
-
     const ahora = Date.now();
-    // Evita registrar el mismo QR varias veces si sigue frente a la cámara
     if (decodedText === ultimoCodigo && (ahora - ultimoTiempo) < 4000) return;
-
-    ultimoCodigo = decodedText;
-    ultimoTiempo = ahora;
-    procesando = true;
+    ultimoCodigo = decodedText; ultimoTiempo = ahora; procesando = true;
     camStatus.textContent = '⏳ Verificando...';
+    registrarEnSheet(decodedText);
+  }
 
-    google.script.run
-      .withSuccessHandler(respuesta => {
+  // ---------- Comunicación con Apps Script vía JSONP (evita el bloqueo CORS) ----------
+  function jsonpRequest(url, params, onSuccess, onError) {
+    const callbackName = 'jsonp_cb_' + Date.now() + '_' + Math.floor(Math.random() * 100000);
+    const timeout = setTimeout(() => {
+      limpiar();
+      if (onError) onError(new Error('Tiempo de espera agotado'));
+    }, 10000);
+
+    function limpiar() {
+      clearTimeout(timeout);
+      delete window[callbackName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+    }
+
+    window[callbackName] = function (data) {
+      limpiar();
+      onSuccess(data);
+    };
+
+    const query = Object.keys(params)
+      .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+      .concat('callback=' + callbackName)
+      .join('&');
+
+    const script = document.createElement('script');
+    script.src = url + '?' + query;
+    script.onerror = function () {
+      limpiar();
+      if (onError) onError(new Error('No se pudo cargar la respuesta del servidor'));
+    };
+    document.body.appendChild(script);
+  }
+
+  function registrarEnSheet(codigo) {
+    jsonpRequest(
+      URL_APPS_SCRIPT,
+      { accion: 'registrar', codigo: codigo },
+      respuesta => { procesando = false; mostrarResultado(respuesta); actualizarResumen(); },
+      err => {
         procesando = false;
-        mostrarResultado(respuesta);
-        actualizarResumen();
-      })
-      .withFailureHandler(error => {
-        procesando = false;
-        mostrarResultado({ status: 'error', mensaje: 'No se pudo conectar con la hoja: ' + error.message });
-      })
-      .registrarAsistencia(decodedText);
+        mostrarResultado({ status: 'error', mensaje: 'No se pudo conectar con la hoja: ' + err.message });
+      }
+    );
+  }
+
+  function actualizarResumen() {
+    jsonpRequest(
+      URL_APPS_SCRIPT,
+      { accion: 'resumen' },
+      res => {
+        document.getElementById('numPresentes').textContent = res.presentes;
+        document.getElementById('numTotal').textContent = res.total;
+      },
+      () => {}
+    );
   }
 
   function mostrarResultado(r) {
     resultBox.className = 'result ' + r.status;
     resultBox.style.display = 'block';
-
     if (r.status === 'ok') {
       beep(880, 150); vibrar(120);
-      resultIcon.textContent = '✓';
-      resultTitle.textContent = '¡Asistencia registrada!';
+      resultIcon.textContent = '✓'; resultTitle.textContent = '¡Asistencia registrada!';
       resultSub.textContent = 'Bienvenido(a) al evento 🎉';
-      resultDatos.innerHTML = datosHTML(r.persona) +
-        fila('Hora', r.hora || '');
+      resultDatos.innerHTML = datosHTML(r.persona) + fila('Hora', r.hora || '');
       agregarHistorial(r.persona.nombre, r.hora, 'ok');
-      camStatus.textContent = '📷 Listo para el siguiente escaneo...';
-
     } else if (r.status === 'duplicado') {
       beep(440, 200); vibrar([80,60,80]);
-      resultIcon.textContent = '↻';
-      resultTitle.textContent = 'Ya estaba registrado';
+      resultIcon.textContent = '↻'; resultTitle.textContent = 'Ya estaba registrado';
       resultSub.textContent = 'Este docente ya marcó asistencia';
-      resultDatos.innerHTML = datosHTML(r.persona) +
-        fila('Registrado a las', r.hora || '');
+      resultDatos.innerHTML = datosHTML(r.persona) + fila('Registrado a las', r.hora || '');
       agregarHistorial(r.persona.nombre, r.hora, 'dup');
-      camStatus.textContent = '📷 Listo para el siguiente escaneo...';
-
     } else if (r.status === 'no_encontrado') {
       beep(220, 250); vibrar(200);
-      resultIcon.textContent = '✕';
-      resultTitle.textContent = 'Código no reconocido';
+      resultIcon.textContent = '✕'; resultTitle.textContent = 'Código no reconocido';
       resultSub.textContent = r.mensaje || 'No coincide con ningún registro';
       resultDatos.innerHTML = '';
-      camStatus.textContent = '📷 Intenta escanear de nuevo...';
-
-    } else { // error
+    } else {
       beep(220, 250);
-      resultIcon.textContent = '!';
-      resultTitle.textContent = 'Ocurrió un error';
+      resultIcon.textContent = '!'; resultTitle.textContent = 'Ocurrió un error';
       resultSub.textContent = r.mensaje || 'Intenta nuevamente';
       resultDatos.innerHTML = '';
-      camStatus.textContent = '📷 Intenta escanear de nuevo...';
     }
+    camStatus.textContent = '📷 Listo para el siguiente escaneo...';
   }
 
-  function datosHTML(persona) {
-    return fila('Nombre', persona.nombre) +
-           fila('DNI', persona.dni) +
-           fila('Correo', persona.correo) +
-           fila('Sede', persona.sede) +
-           fila('Cargo', persona.cargo) +
-           fila('Tipo de invitado', persona.tipoInvitado);
-  }
-  function fila(etiqueta, valor) {
-    return '<div><span class="lbl">' + etiqueta + '</span><span class="val">' + (valor || '-') + '</span></div>';
-  }
-
+  function datosHTML(p){
+  return fila('Nombre', p.nombre)
+       + fila('DNI', p.dni)
+       + fila('Correo', p.correo)
+       + fila('Sede', p.sede)
+       + fila('Cargo', p.cargo)
+       + fila('Tipo', p.tipoInvitado);
+}
+  function fila(l,v){ return '<div><span class="lbl">'+l+'</span><span class="val">'+(v||'-')+'</span></div>'; }
   function agregarHistorial(nombre, hora, tipo) {
     const item = document.createElement('div');
     item.className = 'hist-item ' + tipo;
-    item.innerHTML = '<span class="nombre">' + nombre + '</span><span class="hora">' + (hora || '') + '</span>';
+    item.innerHTML = '<span class="nombre">'+nombre+'</span><span class="hora">'+(hora||'')+'</span>';
     listaHistorial.prepend(item);
-    // Mantener solo los últimos 8
-    while (listaHistorial.children.length > 8) {
-      listaHistorial.removeChild(listaHistorial.lastChild);
-    }
+    while (listaHistorial.children.length > 8) listaHistorial.removeChild(listaHistorial.lastChild);
   }
 
-  function actualizarResumen() {
-    google.script.run
-      .withSuccessHandler(res => {
-        document.getElementById('numPresentes').textContent = res.presentes;
-        document.getElementById('numTotal').textContent = res.total;
-      })
-      .withFailureHandler(error => {
-        camStatus.textContent = '⚠️ Error al leer el resumen: ' + error.message;
-        console.error('Error obtenerResumen:', error);
-      })
-      .obtenerResumen();
-  }
-
-  // ---------- Botones ----------
   btnPausar.addEventListener('click', () => {
     pausado = !pausado;
     btnPausar.textContent = pausado ? '▶ Reanudar' : '⏸ Pausar';
     camStatus.textContent = pausado ? '⏸ Escáner en pausa' : '📷 Enfoca el QR del docente...';
   });
-
   btnCambiarCam.addEventListener('click', () => {
     if (camaras.length < 2 || !html5QrCode) return;
     camaraActualIdx = (camaraActualIdx + 1) % camaras.length;
-    html5QrCode.stop().then(() => {
-      arrancarCamara(camaras[camaraActualIdx].id);
-    }).catch(() => arrancarCamara(camaras[camaraActualIdx].id));
+    html5QrCode.stop().then(() => arrancarCamara(camaras[camaraActualIdx].id))
+      .catch(() => arrancarCamara(camaras[camaraActualIdx].id));
   });
 
-  // ---------- Arranque ----------
-  window.addEventListener('load', () => {
-    iniciarEscaner();
-    actualizarResumen();
-  });
+  window.addEventListener('load', actualizarResumen);
 </script>
 </body>
 </html>
