@@ -64,8 +64,9 @@
 <body>
 <div class="container">
   <header>
-    <div class="logo-wrap">
-      <img src="https://via.placeholder.com/150x150.png?text=INNOVA" alt="Innova Schools">
+    <div class="logo-wrap" style="background:var(--innova-teal);display:flex;align-items:center;justify-content:center;">
+      <!-- Reemplaza este bloque por <img src="URL_DE_TU_LOGO" alt="Innova Schools"> cuando tengas el link del logo -->
+      <span style="color:#fff;font-weight:800;font-size:22px;">IS</span>
     </div>
     <h1>🎓 Día del Maestro</h1>
     <p>Control de asistencia por código QR</p>
@@ -107,7 +108,7 @@
 
 <script>
   // ⚠️ PEGA AQUÍ LA URL DE TU DESPLIEGUE DE APPS SCRIPT (termina en /exec)
-  const URL_APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbyAdjU49pPRQOhSwhxlU6xr93zo5CtnW58KzlpFg5iyGeX9JnWf3lx5bFgz3chX5Jdx/exec';
+  const URL_APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbw4m-SOnO2_kSZNa2f8IWgMYhp7ZLJxnGI19CHUTMywSz_we28uZ4DvMZKkT9Wk8oNI/exec';
 
   const readerId = "reader";
   let html5QrCode;
@@ -196,29 +197,61 @@
     registrarEnSheet(decodedText);
   }
 
-  // ---------- Comunicación con Apps Script vía fetch ----------
+  // ---------- Comunicación con Apps Script vía JSONP (evita el bloqueo CORS) ----------
+  function jsonpRequest(url, params, onSuccess, onError) {
+    const callbackName = 'jsonp_cb_' + Date.now() + '_' + Math.floor(Math.random() * 100000);
+    const timeout = setTimeout(() => {
+      limpiar();
+      if (onError) onError(new Error('Tiempo de espera agotado'));
+    }, 10000);
+
+    function limpiar() {
+      clearTimeout(timeout);
+      delete window[callbackName];
+      if (script.parentNode) script.parentNode.removeChild(script);
+    }
+
+    window[callbackName] = function (data) {
+      limpiar();
+      onSuccess(data);
+    };
+
+    const query = Object.keys(params)
+      .map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+      .concat('callback=' + callbackName)
+      .join('&');
+
+    const script = document.createElement('script');
+    script.src = url + '?' + query;
+    script.onerror = function () {
+      limpiar();
+      if (onError) onError(new Error('No se pudo cargar la respuesta del servidor'));
+    };
+    document.body.appendChild(script);
+  }
+
   function registrarEnSheet(codigo) {
-    fetch(URL_APPS_SCRIPT, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // evita preflight CORS
-      body: JSON.stringify({ accion: 'registrar', codigo: codigo })
-    })
-      .then(r => r.json())
-      .then(respuesta => { procesando = false; mostrarResultado(respuesta); actualizarResumen(); })
-      .catch(err => {
+    jsonpRequest(
+      URL_APPS_SCRIPT,
+      { accion: 'registrar', codigo: codigo },
+      respuesta => { procesando = false; mostrarResultado(respuesta); actualizarResumen(); },
+      err => {
         procesando = false;
         mostrarResultado({ status: 'error', mensaje: 'No se pudo conectar con la hoja: ' + err.message });
-      });
+      }
+    );
   }
 
   function actualizarResumen() {
-    fetch(URL_APPS_SCRIPT + '?accion=resumen')
-      .then(r => r.json())
-      .then(res => {
+    jsonpRequest(
+      URL_APPS_SCRIPT,
+      { accion: 'resumen' },
+      res => {
         document.getElementById('numPresentes').textContent = res.presentes;
         document.getElementById('numTotal').textContent = res.total;
-      })
-      .catch(() => {});
+      },
+      () => {}
+    );
   }
 
   function mostrarResultado(r) {
