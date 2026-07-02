@@ -16,9 +16,9 @@
     min-height:100vh;color:#1B2A4A;}
   .container{max-width:480px;margin:0 auto;padding:16px 16px 40px;}
   header{text-align:center;padding:18px 10px 10px;color:#fff;}
-  header .logo-wrap{width:78px;height:78px;margin:0 auto 10px;background:#fff;border-radius:50%;
-    display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.25);overflow:hidden;}
-  header .logo-wrap img{width:100%;height:100%;object-fit:contain;}
+  header .logo-wrap{width:82px;height:82px;margin:0 auto 10px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,.25);overflow:hidden;}
+header .logo-wrap img{width:100%;height:100%;object-fit:cover;}
   header h1{font-size:19px;margin:4px 0 2px;font-weight:700;}
   header p{margin:0;font-size:13px;opacity:.9;}
   .card{background:#fff;border-radius:16px;padding:16px;margin-top:14px;box-shadow:0 6px 20px rgba(0,0,0,.12);}
@@ -65,8 +65,9 @@
 <div class="container">
   <header>
     <div class="logo-wrap" style="background:var(--innova-teal);display:flex;align-items:center;justify-content:center;">
-      <!-- Reemplaza este bloque por <img src="https://raw.githubusercontent.com/LUIS95paredes/logo_maestro/acb04b505c68f0c469a6ddd3bbdf5c6f3f744fe1/ChatGPT%20Image%201%20jul%202026%2C%2010_48_38%20p.m..png" alt="Innova Schools"> cuando tengas el link del logo -->
-      <span style="color:#fff;font-weight:800;font-size:22px;">IS</span>
+     <div class="logo-wrap">
+  <img src="https://raw.githubusercontent.com/LUIS95paredes/logo_maestro/acb04b505c68f0c469a6ddd3bbdf5c6f3f744fe1/ChatGPT%20Image%201%20jul%202026%2C%2010_48_38%20p.m..png" alt="Innova Schools">
+</div>
     </div>
     <h1>🎓 Día del Maestro</h1>
     <p>Control de asistencia por código QR</p>
@@ -109,7 +110,7 @@
 
 <script>
   // ⚠️ PEGA AQUÍ LA URL DE TU DESPLIEGUE DE APPS SCRIPT (termina en /exec)
-  const URL_APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbyYdV_w5CR65OegPn_Zpw0-YqZyWm53rQDrNoHP_d3oYoZNt9JlWtYVKhglftzwYth5/exec';
+  const URL_APPS_SCRIPT = 'https://script.google.com/macros/s/AKfycbzZujBfEXxhN9dq104WKTAwQSRw-PyiLASXttTshSKNmTuQF95ntNPQNLjr5vUqZA/exec';
 
   const readerId = "reader";
   let html5QrCode;
